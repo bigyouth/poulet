@@ -1,14 +1,14 @@
 /**
- * Poulet.js v0.0.0
+ * Poulet.js v0.0.1
  * (c) 2017 Alex Toudic
  * Released under MIT License.
  **/
 
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('lodash'), require('chirashi')) :
-	typeof define === 'function' && define.amd ? define(['exports', 'lodash', 'chirashi'], factory) :
-	(factory((global.Poulet = global.Poulet || {}),global._,global.Chirashi));
-}(this, (function (exports,lodash,chirashi) { 'use strict';
+	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('lodash'), require('chirashi')) :
+	typeof define === 'function' && define.amd ? define(['lodash', 'chirashi'], factory) :
+	(global.Poulet = factory(global._,global.Chirashi));
+}(this, (function (lodash,chirashi) { 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
   return typeof obj;
@@ -880,8 +880,6 @@ var Core = function (_Component) {
 
 var Poulet = Object.assign(Core, { get: get$1, set: set$1 });
 
-exports.Poulet = Poulet;
-
-Object.defineProperty(exports, '__esModule', { value: true });
+return Poulet;
 
 })));

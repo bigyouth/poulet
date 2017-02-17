@@ -1,12 +1,10 @@
 /**
- * Poulet.js v0.0.0
+ * Poulet.js v0.0.1
  * (c) 2017 Alex Toudic
  * Released under MIT License.
  **/
 
 'use strict';
-
-Object.defineProperty(exports, '__esModule', { value: true });
 
 var lodash = require('lodash');
 var chirashi = require('chirashi');
@@ -881,4 +879,4 @@ var Core = function (_Component) {
 
 var Poulet = Object.assign(Core, { get: get$1, set: set$1 });
 
-exports.Poulet = Poulet;
+module.exports = Poulet;

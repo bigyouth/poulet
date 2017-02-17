@@ -1,5 +1,5 @@
 /**
- * Poulet.js v0.0.0
+ * Poulet.js v0.0.1
  * (c) 2017 Alex Toudic
  * Released under MIT License.
  **/
@@ -877,4 +877,4 @@ var Core = function (_Component) {
 
 var Poulet = Object.assign(Core, { get: get$1, set: set$1 });
 
-export { Poulet };
+export default Poulet;
