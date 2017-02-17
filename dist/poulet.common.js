@@ -1,5 +1,5 @@
 /**
- * Poulet.js v0.0.1
+ * Poulet.js v0.0.2
  * (c) 2017 Alex Toudic
  * Released under MIT License.
  **/
@@ -725,7 +725,7 @@ var Directives = Object.freeze({
 });
 
 var defaultsGlobals = {
-  $prefix: 'by-'
+  $prefix: 'p-'
 };
 
 var defaults$$1 = {
