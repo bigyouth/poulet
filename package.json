@@ -1,0 +1,64 @@
+{
+  "name": "poulet",
+  "version": "0.0.0",
+  "description": "Micro famework inspired by VueJS without DOM generation.",
+  "keywords": [
+    "DOM",
+    "events"
+  ],
+  "main": "./dist/poulet.common.js",
+  "module": "./dist/poulet.mjs",
+  "jsnext:main": "./dist/poulet.mjs",
+  "files": [
+    "lib",
+    "dist"
+  ],
+  "scripts": {
+    "build": "node build/build.js",
+    "analyze": "bash build/analyze.sh",
+    "lint": "eslint ./lib",
+    "docs": "documentation build ./lib -f md -o docs/documentation.md"
+  },
+  "homepage": "https://bigyouth.org",
+  "author": {
+    "name": "Alex Toudic",
+    "mail": "alex@bigyouth.fr",
+    "url": "https://bigyouth.fr"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bigyouth/poulet.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bigyouth/poulet/issues"
+  },
+  "devDependencies": {
+    "babel-core": "^6.22.1",
+    "babel-loader": "^6.2.10",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-plugin-istanbul": "^3.1.2",
+    "babel-plugin-transform-object-rest-spread": "^6.20.2",
+    "babel-preset-latest": "^6.16.0",
+    "babelrc-rollup": "^3.0.0",
+    "eslint": "^3.13.1",
+    "eslint-config-standard": "^6.2.1",
+    "eslint-plugin-promise": "^3.4.0",
+    "eslint-plugin-standard": "^2.0.1",
+    "mkdirp": "^0.5.1",
+    "rollup": "^0.41.4",
+    "rollup-plugin-babel": "^2.7.1",
+    "rollup-plugin-local-resolve": "^1.0.7",
+    "uglify-js": "^2.7.5",
+    "webpack": "^2.2.1"
+  },
+  "dependencies": {
+    "chirashi": "beta",
+    "lodash": "^4.17.4"
+  },
+  "browserify": {
+    "transform": [
+      "babelify"
+    ]
+  }
+}

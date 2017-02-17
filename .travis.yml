@@ -1,0 +1,11 @@
+language: node_js
+node_js:
+  - "6"
+addons:
+  code_climate:
+    repo_token: CODECLIMATE_TOKEN
+before_script:
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
+after_script:
+  - codeclimate-test-reporter < ./coverage/report-lcov/lcov.info
