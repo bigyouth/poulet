@@ -53,7 +53,7 @@
     "webpack": "^2.2.1"
   },
   "dependencies": {
-    "chirashi": "beta",
+    "chirashi": "6.3.0-rc",
     "lodash": "^4.17.4"
   },
   "browserify": {
