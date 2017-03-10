@@ -1,5 +1,5 @@
 /**
- * Poulet.js v0.0.2
+ * Poulet.js v0.0.3
  * (c) 2017 Alex Toudic
  * Released under MIT License.
  **/
@@ -219,25 +219,49 @@ function _copyAccessor(key, to, from) {
   Object.defineProperty(to, key, Object.getOwnPropertyDescriptor(from, key));
 }
 
+var _arrayChangingMethods = ['push', 'splice', 'unshift'];
+
 function _defineReactive(watchers, watchKey, output, key, value) {
   watchKey += key;
 
-  watchers[watchKey] = [];
+  watchers[watchKey] = {};
 
   Object.defineProperty(output, key, {
     get: function get$$1() {
       return value;
     },
     set: function set$$1(newValue) {
+      chirashi.forIn(watchers[watchKey], function (key, options) {
+        return options.beforeChange();
+      });
+
       value = newValue;
 
       if ((typeof newValue === 'undefined' ? 'undefined' : _typeof(newValue)) === 'object') {
         chirashi.forIn(newValue, _defineReactive.bind(null, watchers, watchKey + '.', output[key]));
       }
 
-      chirashi.forEach(watchers[watchKey], function (callback) {
-        callback(value);
+      chirashi.forIn(watchers[watchKey], function (key, options) {
+        return options.afterChange();
       });
+
+      if (value instanceof Array) {
+        chirashi.forEach(_arrayChangingMethods, function (method) {
+          value[method] = function () {
+            chirashi.forIn(watchers[watchKey], function (key, options) {
+              if (options.deep) options.beforeChange();
+            });
+
+            var ret = Array.prototype[method].apply(this, arguments);
+
+            chirashi.forIn(watchers[watchKey], function (key, options) {
+              if (options.deep) options.afterChange();
+            });
+
+            return ret;
+          };
+        });
+      }
     }
   });
 
@@ -376,37 +400,67 @@ var Component = function () {
     }
   }, {
     key: '$watch',
-    value: function $watch(key, options) {
-      if (typeof options === 'function') {
-        options = {
-          deep: false,
-          immediate: false,
-          handler: options
-        };
-      }
+    value: function $watch(key, callback) {
+      var _this4 = this;
 
-      if (options.deep) {
-        chirashi.forIn(this._watchers, function (watchKey, watchers) {
-          if (watchKey.indexOf(key) === 0) {
-            watchers.push(options.handler);
+      var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : { deep: false, immediate: false };
+
+      var watcherId = lodash.uniqueId(this.$id + '-' + key + '-');
+
+      if (typeof callback === 'string') callback = this.$scope[callback];
+
+      var oldValue = {
+        value: null
+      };
+
+      options.beforeChange = function () {
+        var old = get$1(_this4.$scope, key);
+
+        if (old instanceof Array) {
+          oldValue.value = [].concat(toConsumableArray(old));
+        } else if ((typeof old === 'undefined' ? 'undefined' : _typeof(old)) === 'object') {
+          oldValue.value = _extends({}, old);
+        } else {
+          oldValue.value = old;
+        }
+      };
+
+      options.afterChange = function () {
+        callback(get$1(_this4.$scope, key), oldValue.value);
+      };
+
+      if (key in this._watchers) {
+        this._watchers[key][watcherId] = options;
+
+        if (options.deep) {
+          var keyRoot = key + '.';
+          if (_typeof(get$1(this.$scope, key)) === 'object') {
+            chirashi.forIn(this._watchers, function (watchKey, watchers) {
+              if (watchKey.indexOf(keyRoot) === 0) {
+                _this4._watchers[watchKey][watcherId] = options;
+              }
+            });
           }
-        });
-      } else {
-        if (key in this._watchers) {
-          this._watchers[key].push(options.handler);
         }
       }
 
       if (options.immediate) {
-        options.handler(get$1(this.$scope, key));
+        options.afterChange();
       }
-    }
-  }, {
-    key: '$unwatch',
-    value: function $unwatch(key, callback) {
-      chirashi.forIn(this._watchers, function (watchKey, watchers) {
-        watchers.splice(watchers.indexOf(callback), 1);
-      });
+
+      return function () {
+        if (options.deep) {
+          if (_typeof(get$1(_this4.$scope, key)) === 'object') {
+            chirashi.forIn(_this4._watchers, function (watchKey, watchers) {
+              delete _this4._watchers[watchKey][watcherId];
+            });
+          }
+        } else {
+          if (key in _this4._watchers) {
+            delete _this4._watchers[key][watcherId];
+          }
+        }
+      };
     }
   }, {
     key: '$mount',
@@ -542,19 +596,17 @@ var Directive = function () {
 
       var closests = [this.$el].concat(toConsumableArray(chirashi.parents(this.$el)));
       var parent = void 0;
-      var i = -1;
-      while ((parent = closests[++i]) && !(this.$marker in parent)) {}
+      var i = 0;
+      while ((parent = closests[i++]) && !(this.$marker in parent)) {}
 
       this.$component = this.$components[parent[this.$marker]];
 
       if (this.bind) this.bind(el);
 
+      this.unwatchers = [];
       if (this.$option.props.length) {
         chirashi.forEach(this.$option.props, function (prop) {
-          _this2.$component.$watch(prop, {
-            immediate: true,
-            handler: _this2.$update
-          });
+          _this2.unwatchers.push(_this2.$component.$watch(prop, _this2.$update, { immediate: true }));
         });
       } else {
         this.$update();
@@ -568,10 +620,8 @@ var Directive = function () {
   }, {
     key: '$unbind',
     value: function $unbind() {
-      var _this3 = this;
-
-      chirashi.forEach(this.$option.props, function (prop) {
-        _this3.$component.$unwatch(prop, _this3.$update);
+      chirashi.forEach(this.unwatchers, function (unwatch) {
+        unwatch();
       });
 
       if (this.unbind) this.unbind();
@@ -667,9 +717,7 @@ var Model = {
 
     switch (this.type) {
       case 'checkbox':
-        console.log(this.$el.checked);
         chirashi.setProp(this.$el, { checked: newValue });
-        console.log(this.$el.checked);
         break;
 
       case 'radio':
@@ -694,7 +742,6 @@ var On = {
   update: function update(options) {
     if (this.offObj) this.offObj.off();
 
-    console.log('on', options);
     chirashi.on(this.$el, options);
   }
 };

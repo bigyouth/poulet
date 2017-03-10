@@ -1,6 +1,6 @@
 {
   "name": "poulet",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Micro famework inspired by VueJS without DOM generation.",
   "keywords": [
     "DOM",
