@@ -1,5 +1,5 @@
 /**
- * Poulet.js v0.0.3
+ * Poulet.js v0.0.4
  * (c) 2017 Alex Toudic
  * Released under MIT License.
  **/
