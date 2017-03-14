@@ -747,8 +747,6 @@ var On = {
   }
 };
 
-console.log('setStyleProp', chirashi.setStyleProp);
-
 var Show = {
   update: function update(value) {
     chirashi.setStyleProp(this.$el, {

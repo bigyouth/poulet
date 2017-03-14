@@ -744,8 +744,6 @@ var On = {
   }
 };
 
-console.log('setStyleProp', setStyleProp);
-
 var Show = {
   update: function update(value) {
     setStyleProp(this.$el, {
