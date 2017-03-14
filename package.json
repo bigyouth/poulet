@@ -1,6 +1,6 @@
 {
   "name": "poulet",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Micro famework inspired by VueJS without DOM generation.",
   "keywords": [
     "DOM",
@@ -53,7 +53,7 @@
     "webpack": "^2.2.1"
   },
   "dependencies": {
-    "chirashi": "6.3.0-rc",
+    "chirashi": "^6.4.3-rc",
     "lodash": "^4.17.4"
   },
   "browserify": {

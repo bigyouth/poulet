@@ -1,5 +1,5 @@
 /**
- * Poulet.js v0.0.4
+ * Poulet.js v0.0.5
  * (c) 2017 Alex Toudic
  * Released under MIT License.
  **/
@@ -656,8 +656,8 @@ var Class = {
       return newClasses.indexOf(className) === -1;
     });
 
-    chirashi.addClass.apply(undefined, [this.$el].concat(toConsumableArray(newClasses)));
-    chirashi.removeClass.apply(undefined, [this.$el].concat(toConsumableArray(removeClasses)));
+    if (newClasses.length) chirashi.addClass.apply(undefined, [this.$el].concat(toConsumableArray(newClasses)));
+    if (removeClasses.length) chirashi.removeClass.apply(undefined, [this.$el].concat(toConsumableArray(removeClasses)));
 
     this.currentClasses = newClasses;
   }
@@ -737,18 +737,20 @@ var Model = {
 
 var On = {
   unbind: function unbind() {
-    if (this.offObj) this.offObj.off();
+    if (this.off) this.off();
   },
   update: function update(options) {
-    if (this.offObj) this.offObj.off();
+    if (this.off) this.off();
 
     chirashi.on(this.$el, options);
   }
 };
 
+console.log('setStyleProp', chirashi.setStyleProp);
+
 var Show = {
   update: function update(value) {
-    chirashi.setStyle(this.$el, {
+    chirashi.setStyleProp(this.$el, {
       display: value ? 'block' : 'none'
     });
   }

@@ -1,11 +1,11 @@
 /**
- * Poulet.js v0.0.4
+ * Poulet.js v0.0.5
  * (c) 2017 Alex Toudic
  * Released under MIT License.
  **/
 
 import { kebabCase, uniqueId } from 'lodash';
-import { addClass, closest, find, forEach, forIn, getAttr, getElement, getProp, on, parents, removeClass, setProp, setStyle } from 'chirashi';
+import { addClass, closest, find, forEach, forIn, getAttr, getElement, getProp, on, parents, removeClass, setProp, setStyleProp } from 'chirashi';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
   return typeof obj;
@@ -654,8 +654,8 @@ var Class = {
       return newClasses.indexOf(className) === -1;
     });
 
-    addClass.apply(undefined, [this.$el].concat(toConsumableArray(newClasses)));
-    removeClass.apply(undefined, [this.$el].concat(toConsumableArray(removeClasses)));
+    if (newClasses.length) addClass.apply(undefined, [this.$el].concat(toConsumableArray(newClasses)));
+    if (removeClasses.length) removeClass.apply(undefined, [this.$el].concat(toConsumableArray(removeClasses)));
 
     this.currentClasses = newClasses;
   }
@@ -735,18 +735,20 @@ var Model = {
 
 var On = {
   unbind: function unbind() {
-    if (this.offObj) this.offObj.off();
+    if (this.off) this.off();
   },
   update: function update(options) {
-    if (this.offObj) this.offObj.off();
+    if (this.off) this.off();
 
     on(this.$el, options);
   }
 };
 
+console.log('setStyleProp', setStyleProp);
+
 var Show = {
   update: function update(value) {
-    setStyle(this.$el, {
+    setStyleProp(this.$el, {
       display: value ? 'block' : 'none'
     });
   }
