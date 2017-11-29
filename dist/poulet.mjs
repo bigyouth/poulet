@@ -1,5 +1,5 @@
 /**
- * Poulet.js v0.0.5
+ * Poulet.js v0.0.6
  * (c) 2017 Alex Toudic
  * Released under MIT License.
  **/
@@ -195,7 +195,11 @@ var Observer = function () {
     key: '_update',
     value: function _update() {
       forEach(this._listeners, function (listener) {
-        return listener();
+        try {
+          listener();
+        } catch (e) {
+          console.error(e);
+        }
       });
     }
   }]);
@@ -467,12 +471,20 @@ var Component = function () {
 
       this.$el[this.$marker] = this.$id;
 
-      this.mounted(el);
+      try {
+        this.mounted(el);
+      } catch (e) {
+        console.error(e);
+      }
     }
   }, {
     key: '$destroy',
     value: function $destroy() {
-      this.beforeDestroy();
+      try {
+        this.beforeDestroy();
+      } catch (e) {
+        console.error(e);
+      }
     }
   }]);
   return Component;
@@ -599,7 +611,13 @@ var Directive = function () {
 
       this.$component = this.$components[parent[this.$marker]];
 
-      if (this.bind) this.bind(el);
+      if (this.bind) {
+        try {
+          this.bind(el);
+        } catch (e) {
+          console.error(e);
+        }
+      }
 
       this.unwatchers = [];
       if (this.$option.props.length) {
@@ -613,7 +631,13 @@ var Directive = function () {
   }, {
     key: '$update',
     value: function $update() {
-      if (this.update) this.update(this._eval(this.$option.template));
+      if (this.update) {
+        try {
+          this.update(this._eval(this.$option.template));
+        } catch (e) {
+          console.error(e);
+        }
+      }
     }
   }, {
     key: '$unbind',
@@ -622,7 +646,13 @@ var Directive = function () {
         unwatch();
       });
 
-      if (this.unbind) this.unbind();
+      if (this.unbind) {
+        try {
+          this.unbind();
+        } catch (e) {
+          console.error(e);
+        }
+      }
     }
   }, {
     key: '$scope',
