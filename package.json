@@ -1,6 +1,6 @@
 {
   "name": "poulet",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Micro famework inspired by VueJS without DOM generation.",
   "keywords": [
     "DOM",
@@ -41,7 +41,7 @@
     "babel-plugin-transform-object-rest-spread": "^6.20.2",
     "babel-preset-latest": "^6.16.0",
     "babelrc-rollup": "^3.0.0",
-    "eslint": "^3.13.1",
+    "eslint": "^4.18.2",
     "eslint-config-standard": "^6.2.1",
     "eslint-plugin-promise": "^3.4.0",
     "eslint-plugin-standard": "^2.0.1",
@@ -54,7 +54,7 @@
   },
   "dependencies": {
     "chirashi": "^6.4.3-rc",
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.5"
   },
   "browserify": {
     "transform": [
